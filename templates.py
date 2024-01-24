@@ -51,8 +51,7 @@ def number_of_results(total_hits: int, duration: float) -> str:
         </div><br>
     """
 
-def search_result(i: int, url: str, title: str, highlights: str,
-                  author: str, length: str, **kwargs) -> str:
+def search_result(i: int, url: str, title: str, highlights: str) -> str:
     """ HTML scripts to display search results. """
     return f"""
         <div style="font-size:120%;">
@@ -64,12 +63,6 @@ def search_result(i: int, url: str, title: str, highlights: str,
         <div style="font-size:95%;">
             <div style="color:grey;font-size:95%;">
                 {url[:90] + '...' if len(url) > 100 else url}
-            </div>
-            <div style="float:left;font-style:italic;">
-                {author} ·&nbsp;
-            </div>
-            <div style="color:grey;float:left;">
-                {length} ...
             </div>
             {highlights}
         </div>
