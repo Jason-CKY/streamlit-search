@@ -31,17 +31,18 @@ def set_session_state():
     if 'page' in st.query_params:
         st.session_state.page = int(st.query_params['page'])
 
+def search_input_on_change():
+    st.query_params["search"] = st.session_state.search
+
 def main():
     set_session_state()
     st.set_page_config(page_title='AI-Powered Search Engine')
     st.write(templates.load_css(), unsafe_allow_html=True)
     st.title('AI-Powered Search')
-    if st.session_state.search is None:
-        search = st.text_input('Enter search words:')
-    else:
-        search = st.text_input('Enter search words:', value=st.session_state.search)
+   
+    search = st.text_input('Enter search words:', key="search", on_change=search_input_on_change)
     if search:
-        st.query_params["search"] = search
+        
         results = mock_search_results(search)
         from_i = (st.session_state.page - 1) * PAGE_SIZE
         paginated_results = results[from_i:from_i+PAGE_SIZE]
