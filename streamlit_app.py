@@ -33,6 +33,7 @@ def set_session_state():
 
 def search_input_on_change():
     st.query_params["search"] = st.session_state.search
+    st.query_params["page"] = 1
 
 def main():
     set_session_state()
@@ -53,7 +54,7 @@ def main():
         for i, result in enumerate(paginated_results):
             st.write(
                 templates.search_result(
-                    i=i,
+                    i=from_i + i,
                     url=result.link,
                     title=result.title,
                     highlights=result.page_content), unsafe_allow_html=True)
