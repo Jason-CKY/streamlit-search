@@ -43,7 +43,6 @@ def main():
    
     search = st.text_input('Enter search words:', key="search", on_change=search_input_on_change)
     if search:
-        
         results = mock_search_results(search)
         from_i = (st.session_state.page - 1) * PAGE_SIZE
         paginated_results = results[from_i:from_i+PAGE_SIZE]
