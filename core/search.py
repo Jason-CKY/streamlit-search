@@ -2,7 +2,7 @@ import asyncio
 from schemas.search import SearchResult
 
 async def mock_search_results(search: str):
-    await asyncio.sleep(2)
+    await asyncio.sleep(1)
     return [
         SearchResult(
             title=f"Article #{i+1} {search}",

@@ -1,6 +1,7 @@
 import urllib
 import streamlit as st
 from schemas.search import PaginationButton
+from st_btn_group import st_btn_group
 
 def load_css() -> str:
     """ Return all css styles. """
@@ -106,10 +107,11 @@ def pagination(total_pages: int, search: str, current_page: int) -> str:
     if current_page != total_pages:
         buttons.append(PaginationButton(text="Next>", onClick=pagination_on_click, args=[search, current_page + 1]))
 
-    for column, button in zip(st.columns([1 for _ in range(len(buttons))]), buttons):
+    for column, button in zip(st.columns(len(buttons), gap="small"), buttons):
         with column:
             st.button(button.text, disabled=button.disabled, on_click=button.onClick,
-                      args=button.args)
+                      args=button.args, use_container_width=True)
+
 
 def tag_boxes(search: str, tags: list, active_tag: str) -> str:
     """ HTML scripts to render tag boxes. """
