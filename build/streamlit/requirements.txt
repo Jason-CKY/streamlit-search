@@ -2,3 +2,5 @@ pydantic
 pydantic-settings
 streamlit
 loguru
+langchain
+transformers
