@@ -94,8 +94,8 @@ def pagination(total_pages: int, search: str, current_page: int) -> str:
     # st.columns()
     if current_page != 1:
         buttons += [
-            PaginationButton(text="<<First", onClick=pagination_on_click, args=[search, 1]),
-            PaginationButton(text="<<Previous", onClick=pagination_on_click, args=[search, current_page - 1]),
+            PaginationButton(text="<<", onClick=pagination_on_click, args=[search, 1]),
+            PaginationButton(text="<", onClick=pagination_on_click, args=[search, current_page - 1]),
         ]
         
     for i in range(start_from, min(total_pages + 1, start_from + 10)):
@@ -105,7 +105,8 @@ def pagination(total_pages: int, search: str, current_page: int) -> str:
             buttons.append(PaginationButton(text=f"{i}", onClick=pagination_on_click, args=[search, i]))
 
     if current_page != total_pages:
-        buttons.append(PaginationButton(text="Next>", onClick=pagination_on_click, args=[search, current_page + 1]))
+        buttons.append(PaginationButton(text="\>", onClick=pagination_on_click, args=[search, current_page + 1]))
+        buttons.append(PaginationButton(text="\>>", onClick=pagination_on_click, args=[search, total_pages]))
 
     for column, button in zip(st.columns(len(buttons), gap="small"), buttons):
         with column:
