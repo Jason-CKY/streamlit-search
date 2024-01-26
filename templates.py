@@ -42,6 +42,13 @@ def load_css() -> str:
                 background-color: rgb(240, 242, 246);
                 box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
             }}
+            div[data-testid="column"] {{
+                width: fit-content !important;
+                flex: unset;
+            }}
+            div[data-testid="column"] * {{
+                width: fit-content !important;
+            }}
         </style>
     """
 
@@ -103,17 +110,6 @@ def pagination(total_pages: int, search: str, current_page: int) -> str:
         with column:
             st.button(button.text, disabled=button.disabled, on_click=button.onClick,
                       args=button.args)
-    st.markdown("""
-        <style>
-            div[data-testid="column"] {
-                width: fit-content !important;
-                flex: unset;
-            }
-            div[data-testid="column"] * {
-                width: fit-content !important;
-            }
-        </style>
-    """, unsafe_allow_html=True)
 
 def tag_boxes(search: str, tags: list, active_tag: str) -> str:
     """ HTML scripts to render tag boxes. """
