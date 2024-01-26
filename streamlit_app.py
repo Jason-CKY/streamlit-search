@@ -1,20 +1,11 @@
+import time
+import asyncio
 import random
 import streamlit as st
 import templates
 from urllib import parse
-from schemas.search import SearchResult
-
-
-PAGE_SIZE = 5
-
-def mock_search_results(search: str):
-    return [
-        SearchResult(
-            title=f"Article #{i+1} {search}",
-            page_content="Lorem Ipsum fdskfls " * 50,
-            link="https://google.com",
-        ) for i in range(20)
-    ]
+from core.search import mock_search_results, tick
+from core.settings import settings
 
 
 def set_session_state():
@@ -35,17 +26,21 @@ def search_input_on_change():
     st.query_params["search"] = st.session_state.search
     st.query_params["page"] = 1
 
-def main():
+async def main():
     set_session_state()
     st.set_page_config(page_title='AI-Powered Search Engine')
     st.write(templates.load_css(), unsafe_allow_html=True)
     st.title('AI-Powered Search')
+
+    placeholder = st.empty()
+    # await tick(placeholder)
    
     search = st.text_input('Enter search words:', key="search", on_change=search_input_on_change)
     if search:
-        results = mock_search_results(search)
-        from_i = (st.session_state.page - 1) * PAGE_SIZE
-        paginated_results = results[from_i:from_i+PAGE_SIZE]
+        with st.spinner('Wait for it...'):
+            results = await mock_search_results(search)
+        from_i = (st.session_state.page - 1) * settings.page_size
+        paginated_results = results[from_i:from_i + settings.page_size]
         # show number of results and time taken
         st.write(templates.number_of_results(len(results), random.random()),
                  unsafe_allow_html=True)
@@ -58,9 +53,9 @@ def main():
                     title=result.title,
                     highlights=result.page_content), unsafe_allow_html=True)
         # pagination
-        if len(results) > PAGE_SIZE:
-            total_pages = (len(results) + PAGE_SIZE - 1) // PAGE_SIZE
+        if len(results) > settings.page_size:
+            total_pages = (len(results) + settings.page_size - 1) // settings.page_size
             templates.pagination(total_pages, search, st.session_state.page,)
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
