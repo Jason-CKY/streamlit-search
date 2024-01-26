@@ -1,7 +1,6 @@
 import urllib
 import streamlit as st
 from schemas.search import PaginationButton
-from st_btn_group import st_btn_group
 
 def load_css() -> str:
     """ Return all css styles. """
