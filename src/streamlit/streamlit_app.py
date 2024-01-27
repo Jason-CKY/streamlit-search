@@ -51,10 +51,7 @@ async def main():
                 query_time = time.time() - start_time
                 
                 st.write('Generating AI response...')
-                
-                start_time = time.time()
                 llm_response = await get_rag_response(search, results)
-                llm_response_time = time.time() - start_time
 
                 st.session_state._search = search
                 st.session_state.search_results = results
