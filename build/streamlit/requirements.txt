@@ -4,3 +4,4 @@ streamlit
 loguru
 langchain
 transformers
+openai

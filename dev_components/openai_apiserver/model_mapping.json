@@ -1,0 +1,156 @@
+{
+    "e5-small-v2": {
+        "model-id": "intfloat/e5-small-v2",
+        "revision": "dca8b1a9dae0d4575df2bf423a5edb485a431236",
+        "loader_params": {
+            "max_context_length": 512
+        },
+        "tokenizer_params": {
+            "model-id": "intfloat/e5-small-v2",
+            "revision": "dca8b1a9dae0d4575df2bf423a5edb485a431236"
+        }
+    },
+    "all-MiniLM-L6-v2": {
+        "model-id": "sentence-transformers/all-MiniLM-L6-v2",
+        "revision": "c21050a7ef692090620a6d037dd736908f9c7cf6",
+        "loader_params": {
+            "max_context_length": 512
+        },
+        "tokenizer_params": {
+            "model-id": "sentence-transformers/all-MiniLM-L6-v2",
+            "revision": "c21050a7ef692090620a6d037dd736908f9c7cf6"
+        }
+    },
+    "bge-large-en-v1.5": {
+        "model-id": "BAAI/bge-large-en-v1.5",
+        "revision": "0e76a14a47548a15db4aa81d7fb50dba76d5e2c6",
+        "loader_params": {
+            "max_context_length": 512
+        },
+        "tokenizer_params": {
+            "model-id": "BAAI/bge-large-en-v1.5",
+            "revision": "0e76a14a47548a15db4aa81d7fb50dba76d5e2c6"
+        }
+    },
+    "multilingual-e5-large": {
+        "model-id": "intfloat/multilingual-e5-large",
+        "revision": "9f78368af0062735ba99812349c562316e29f719",
+        "loader_params": {
+            "max_context_length": 512
+        },
+        "tokenizer_params": {
+            "model-id": "intfloat/multilingual-e5-large",
+            "revision": "9f78368af0062735ba99812349c562316e29f719"
+        }
+    },
+    "jina-v2-base-en": {
+        "model-id": "jinaai/jina-embeddings-v2-base-en",
+        "revision": "8705ed9657208b2d5220fffad1c3a30980d279d0",
+        "loader_params": {
+            "max_context_length": 8192
+        },
+        "tokenizer_params": {
+            "model-id": "jinaai/jina-embeddings-v2-base-en",
+            "revision": "8705ed9657208b2d5220fffad1c3a30980d279d0"
+        }
+    },
+    "vicuna-13b-v1.5-hf-16k": {
+        "model-id": "lmsys/vicuna-13b-v1.5-16k",
+        "revision": "17c61f9ca19f5a7a04e96b2cc0d9bcf2920cb8c2",
+        "loader_params": {
+            "max_context_length": 16384
+        },
+        "tokenizer_params": {
+            "model-id": "TheBloke/vicuna-13B-v1.5-16K-GPTQ",
+            "revision": "17ef3e160f6c268f72a66a1768c0842867da408e"
+        }
+    },
+    "llama-2-13b-chat-hf": {
+        "model-id": "meta-llama/Llama-2-13b-chat-hf",
+        "revision": "main",
+        "loader_params": {
+            "max_context_length": 4096
+        },
+        "tokenizer_params": {
+            "model-id": "TheBloke/Llama-2-13B-chat-GPTQ",
+            "revision": "ec124ec7c8f14b67b0808b870b08497ce27634fa"
+        }
+    },
+    "llama-2-70b-chat-hf": {
+        "model-id": "meta-llama/Llama-2-70b-chat-hf",
+        "revision": "main",
+        "loader_params": {
+            "max_context_length": 4096
+        },
+        "tokenizer_params": {
+            "model-id": "TheBloke/Llama-2-13B-chat-GPTQ",
+            "revision": "ec124ec7c8f14b67b0808b870b08497ce27634fa"
+        }
+    },
+    "airoboros-l2-70b-3.1.2-hf": {
+        "model-id": "jondurbin/airoboros-l2-70b-3.1.2",
+        "revision": "2de01b0a516bc64859abb16a948733d616dfb6d3",
+        "loader_params": {
+            "max_context_length": 4096
+        },
+        "tokenizer_params": {
+            "model-id": "jondurbin/airoboros-l2-70b-3.1.2",
+            "revision": "2de01b0a516bc64859abb16a948733d616dfb6d3"
+        }
+    },
+    "airoboros-l2-c70b-3.1.2-hf": {
+        "model-id": "jondurbin/airoboros-l2-c70b-3.1.2",
+        "revision": "f4fd24f0d2f1f0706a16e039a134f5f2ae7f7605",
+        "loader_params": {
+            "max_context_length": 4096
+        },
+        "tokenizer_params": {
+            "model-id": "jondurbin/airoboros-l2-c70b-3.1.2",
+            "revision": "f4fd24f0d2f1f0706a16e039a134f5f2ae7f7605"
+        }
+    },
+    "llama-2-70b-chat-hf-8k": {
+        "model-id": "meta-llama/Llama-2-70b-chat-hf",
+        "revision": "main",
+        "loader_params": {
+            "max_context_length": 8192
+        },
+        "tokenizer_params": {
+            "model-id": "TheBloke/Llama-2-13B-chat-GPTQ",
+            "revision": "ec124ec7c8f14b67b0808b870b08497ce27634fa"
+        }
+    },
+    "codellama-13b-instruct-hf": {
+        "model-id": "codellama/CodeLlama-13b-Instruct-hf",
+        "revision": "ff0983bc4267bb98ead4fb5168fe2f049b442787",
+        "loader_params": {
+            "max_context_length": 16384
+        },
+        "tokenizer_params": {
+            "model-id": "codellama/CodeLlama-13b-Instruct-hf",
+            "revision": "ff0983bc4267bb98ead4fb5168fe2f049b442787"
+        }
+    },
+    "codellama-34b-instruct-hf": {
+        "model-id": "codellama/CodeLlama-34b-Instruct-hf",
+        "revision": "38a1e15d8524a1f0a7760a7acf8242b81ae4eb87",
+        "loader_params": {
+            "max_context_length": 16384
+        },
+        "tokenizer_params": {
+            "model-id": "codellama/CodeLlama-34b-Instruct-hf",
+            "revision": "38a1e15d8524a1f0a7760a7acf8242b81ae4eb87"
+        }
+    },
+    "sealion-7b-instruct-nc": {
+        "model-id": "aisingapore/sealion7b-instruct-nc",
+        "revision": "9869033e74f2ae74499e96a6267bd42bd6aac511",
+        "loader_params": {
+            "max_context_length": 2048
+        },
+        "tokenizer_params": {
+            "model-id": "aisingapore/sealion7b-instruct-nc",
+            "revision": "9869033e74f2ae74499e96a6267bd42bd6aac511"
+        }
+    }
+}

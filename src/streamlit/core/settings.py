@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     model_id: str = os.getenv("MODEL_ID", "llama-2-70b-chat-hf")
     
-    openai_api_service: str = os.getenv("OPENAI_API_SERVICE", "local") # local or rapid
+    openai_api_service: str = os.getenv("OPENAI_API_SERVICE", "local") # local | rapid | openai
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "test")
     openai_api_base: str
     rapid_client_id: str

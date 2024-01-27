@@ -63,10 +63,9 @@ class ConversationHandler(BaseModel):
 
             logger.debug("Initializing ChatOpenAI using 'RAPIDChatOpenAI'")
             return RAPIDChatOpenAI(
-                model_name=self._model_name,
-                temperature=self._temperature,
-                streaming=self._stream,
-                max_tokens=self._max_tokens,
+                model_name=self.model,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
                 openai_api_base=f"{settings.openai_api_base}",
                 http_client=openai_async_client,
                 callback_manager=callback_manager
@@ -76,15 +75,27 @@ class ConversationHandler(BaseModel):
 
             logger.debug("Initializing ChatOpenAI using 'LocalChatOpenAI'")
             return LocalChatOpenAI(
-                temperature=self._temperature,
-                model_name=self._model_name,
-                streaming=self._stream,
+                temperature=self.temperature,
+                model_name=self.model,
                 openai_api_key=settings.openai_api_key,
                 openai_api_base=settings.openai_api_base,
-                max_tokens=self._max_tokens,
+                max_tokens=self.max_tokens,
+                callback_manager=callback_manager
+            )
+        elif settings.openai_api_service == "openai":
+            from langchain_community.chat_models import ChatOpenAI
+
+            logger.debug("Initializing ChatOpenAI using 'ChatOpenAI'")
+            return ChatOpenAI(
+                temperature=self._temperature, 
+                streaming=self._stream,
+                max_tokens=self.max_tokens,
+                openai_api_key=settings.openai_api_key,
+                openai_api_base=settings.openai_api_base,
                 callback_manager=callback_manager
             )
         else:
+
             logger.error(f"OpenAI API service '{settings.openai_api_service}' not supported.")
             return None
 

@@ -2,7 +2,7 @@
 services:
   streamlit:
     build:
-      dockerfile: ./build/streamlit/Dockerfile
+      dockerfile: build/streamlit/Dockerfile
       context: .
     container_name: streamlit
     environment:
@@ -13,9 +13,18 @@ services:
       OPENAI_API_BASE: ${OPENAI_API_BASE}
       RAPID_CLIENT_ID: ${RAPID_CLIENT_ID}
       RAPID_CLIENT_SECRET: ${RAPID_CLIENT_SECRET}
-
     ports: 
      - 8501:8501
     volumes:
       - ./src/streamlit:/app
+
+  openai-apiserver:
+    build:
+      context: .
+      dockerfile: dev_components/openai_apiserver/Dockerfile
+    container_name: apiserver
+    ports:
+      - 8080:80
+    volumes:
+      - ./dev_components/openai_apiserver:/code/app
 
