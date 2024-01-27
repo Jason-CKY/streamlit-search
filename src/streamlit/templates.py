@@ -90,7 +90,6 @@ def pagination(total_pages: int, search: str, current_page: int) -> str:
         start_from = 1
 
     buttons = []
-    # st.columns()
     if current_page != 1:
         buttons += [
             PaginationButton(text="<<", onClick=pagination_on_click, args=[search, 1]),

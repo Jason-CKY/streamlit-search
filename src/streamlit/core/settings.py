@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     log_level: str = os.getenv("LOG_LEVEL", "DEBUG")
     page_size: int = int(os.getenv("PAGE_SIZE", "5"))
 
-    model_id: str = os.getenv("MODEL_ID", "llama-2-70b-chat-hf")
+    llm_model_id: str = os.getenv("MODEL_ID", "llama-2-70b-chat-hf")
     
     openai_api_service: str = os.getenv("OPENAI_API_SERVICE", "local") # local | rapid | openai
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "test")

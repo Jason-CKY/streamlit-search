@@ -3,7 +3,8 @@ import time
 import streamlit as st
 import templates
 from urllib import parse
-from core.search import mock_get_source_documents, get_rag_response
+from core.search import mock_get_source_documents
+from core.conversation_handler import ConversationHandler
 from core.settings import settings
 
 
@@ -43,31 +44,37 @@ async def main():
     search = st.text_input('Enter search words:', key="search", on_change=search_input_on_change)
     if search:
         if st.session_state._search != search:
-            with st.status('Generating answers...', expanded=True) as status:
-                st.write('Searching for documents...')
-                
+            with st.spinner("Searching for docs..."):
                 start_time = time.time()
                 results = await mock_get_source_documents(search)
                 query_time = time.time() - start_time
-                
-                st.write('Generating AI response...')
-                llm_response = await get_rag_response(search, results)
-
                 st.session_state._search = search
-                st.session_state.search_results = results
-                st.session_state.llm_response = llm_response
+                st.session_state.search_results = results           
                 st.session_state.query_time = query_time
-                status.update(label="Generation complete", state="complete", expanded=False)
+
+                # For the case of new generation, set as placeholder for later streaming
+                llm_response_div = st.empty()
         else:
             results = st.session_state.search_results
             llm_response = st.session_state.llm_response
             query_time = st.session_state.query_time
 
+            # For case of existing results, just write the existing response from session_state
+            # We follow the case of Bing search, where the LLM response will not show on the screen
+            # if the user goes to another page before it finishes streaming, but will show on all pages
+            # after it finishes streaming. If it is stopped halfway through streaming via a page change, 
+            # restart streaming if the user goes back to page 1
+            if st.session_state.llm_response is not None:
+                st.chat_message("assistant").write(llm_response)
+                llm_response_div = None                
+            elif st.session_state.page == 1:
+                llm_response_div = st.empty()
+            else:
+                llm_response_div = None
+        
         from_i = (st.session_state.page - 1) * settings.page_size
         paginated_results = results[from_i:from_i + settings.page_size]
 
-        # Show AI RAG Response
-        st.chat_message("assistant").write(llm_response)
         # show number of results and time taken
         st.write(templates.number_of_results(len(results), query_time),
                  unsafe_allow_html=True)
@@ -82,7 +89,30 @@ async def main():
         # pagination
         if len(results) > settings.page_size:
             total_pages = (len(results) + settings.page_size - 1) // settings.page_size
-            templates.pagination(total_pages, search, st.session_state.page,)
+            templates.pagination(total_pages, search, st.session_state.page)
+
+        if llm_response_div is not None:
+            st.session_state.llm_response = None
+            with llm_response_div.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+
+                handler = ConversationHandler(
+                    model = settings.llm_model_id,
+                    temperature = 0,
+                    max_tokens = 1024,
+                )
+                rag_chain = handler.get_rag_chain()
+                async for chunk in rag_chain.astream({
+                    "context": handler.format_docs(results),
+                    "question": search,
+                }):
+                    full_response += chunk + " "
+                    # Add a blinking cursor to simulate typing
+                    message_placeholder.markdown(full_response + "▌")
+
+                message_placeholder.markdown(full_response)
+                st.session_state.llm_response = full_response
 
 if __name__ == '__main__':
     asyncio.run(main())

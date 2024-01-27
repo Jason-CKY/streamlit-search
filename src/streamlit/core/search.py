@@ -1,7 +1,6 @@
 import asyncio
 import random
 from typing import List
-from loguru import logger
 from schemas.search import SearchResult
 from langchain_core.documents import Document
 from core.conversation_handler import ConversationHandler
@@ -18,9 +17,9 @@ async def mock_get_source_documents(search: str):
     ]
 
 async def get_rag_response(search_query: str, source_documents: List[Document]) -> str:
-    await asyncio.sleep(random.random() * 2)
+    # non-streaming response
     handler = ConversationHandler(
-        model = settings.model_id,
+        model = settings.llm_model_id,
         temperature = 0,
         max_tokens = 1024,
     )
@@ -29,7 +28,5 @@ async def get_rag_response(search_query: str, source_documents: List[Document]) 
         "context": handler.format_docs(source_documents),
         "question": search_query,
     })
-    logger.info(response)
     return response
-
 

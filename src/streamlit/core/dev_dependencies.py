@@ -1,6 +1,6 @@
 import requests
 from langchain.adapters.openai import convert_message_to_dict
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.schema.messages import BaseMessage
 from typing import List, Dict, Any, Optional, Union, Tuple
 
