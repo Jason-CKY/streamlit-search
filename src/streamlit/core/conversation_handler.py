@@ -1,9 +1,5 @@
 from langchain_core.documents import Document
-from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-from langchain.schema.messages import (
-    SystemMessage,
-)
 from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.prompts.prompt import PromptTemplate
 from loguru import logger
@@ -19,11 +15,10 @@ class ConversationHandler(BaseModel):
     max_tokens: int = 1024
     api_token: str = "EMPTY"
 
-    def get_rag_chain(self):
-        qa_prompt = self._get_qa_prompt()
-        model_context_length = get_model_information(self.model)["loader_params"]["max_context_length"]
+    def format_docs(self, documents: List[Document]):
         llm = self._get_llm()
-        
+        model_context_length = get_model_information(self.model)["loader_params"]["max_context_length"]
+
         def _reduce_tokens_below_limit(max_tokens_limit: int, docs: List[Document], llm) -> List[Document]:
             num_docs = len(docs)
 
@@ -38,23 +33,20 @@ class ConversationHandler(BaseModel):
 
             return docs[:num_docs]
         
-        # count tokens and drop documents beyond a token count
-        def format_docs(documents):
-            max_tokens_limit = model_context_length - self._max_tokens - 10
-            return "\n\n".join(doc.page_content for doc in _reduce_tokens_below_limit(max_tokens_limit, documents, llm))
+        max_tokens_limit = model_context_length - self.max_tokens - 10
+        return "\n\n".join(doc.page_content for doc in _reduce_tokens_below_limit(max_tokens_limit, documents, llm))
+
+    def get_rag_chain(self):
+        qa_prompt = self._get_qa_prompt()
+        llm = self._get_llm()
 
         rag_chain_from_docs = (
-            RunnablePassthrough.assign(context=(lambda x: format_docs(x["context"])))
-            | qa_prompt
+            qa_prompt
             | llm
             | StrOutputParser()
         )
 
-        rag_chain_with_source = RunnableParallel(
-            {"context": "test test test", "question": RunnablePassthrough()}
-        ).assign(answer=rag_chain_from_docs)
-
-        return rag_chain_with_source
+        return rag_chain_from_docs
 
     def _get_llm(self, callback_manager = None):
         """Constructs a LLM instance based on the configured OpenAI API service."""

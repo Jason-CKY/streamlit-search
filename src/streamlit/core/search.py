@@ -1,6 +1,7 @@
 import asyncio
 from loguru import logger
 from schemas.search import SearchResult
+from langchain_core.documents import Document
 from core.conversation_handler import ConversationHandler
 from core.settings import settings
 
@@ -12,7 +13,18 @@ async def mock_search_results(search: str):
         max_tokens = 1024,
     )
     rag_chain = handler.get_rag_chain()
-    response = await rag_chain.ainvoke(search)
+    source_documents = [
+        Document(
+            page_content="test from source document", 
+            metadata={
+                "source_document": "https://google.com"
+            }
+        )
+    ]
+    response = await rag_chain.ainvoke({
+        "context": handler.format_docs(source_documents),
+        "question": search,
+    })
     logger.info(response)
 
     return [
