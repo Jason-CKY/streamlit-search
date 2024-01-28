@@ -4,9 +4,10 @@ import streamlit as st
 import templates
 from urllib import parse
 from core.search import mock_get_source_documents
+from core.feedback import handle_search_feedback, handle_rag_feedback
 from core.conversation_handler import ConversationHandler
 from core.settings import settings
-
+from loguru import logger
 
 def set_session_state():
     # set default values
@@ -66,12 +67,16 @@ async def main():
             # restart streaming if the user goes back to page 1
             if st.session_state.llm_response is not None:
                 st.chat_message("assistant").write(llm_response)
-                llm_response_div = None                
+                handle_rag_feedback(search, st.session_state.llm_response, "rag_feedback")  
+                llm_response_div = None        
             elif st.session_state.page == 1:
                 llm_response_div = st.empty()
             else:
                 llm_response_div = None
-        
+
+        if llm_response_div is not None:
+            feedback_div = st.empty()
+
         from_i = (st.session_state.page - 1) * settings.page_size
         paginated_results = results[from_i:from_i + settings.page_size]
 
@@ -83,9 +88,14 @@ async def main():
             st.write(
                 templates.search_result(
                     i=from_i + i,
-                    url=result.link,
-                    title=result.title,
+                    url=result.metadata["link"],
+                    title=result.metadata["title"],
                     highlights=result.page_content), unsafe_allow_html=True)
+            handle_search_feedback(
+                query=search,
+                search_result=result,
+                key=f"{i}",
+            )
         # pagination
         if len(results) > settings.page_size:
             total_pages = (len(results) + settings.page_size - 1) // settings.page_size
@@ -113,6 +123,8 @@ async def main():
 
                 message_placeholder.markdown(full_response)
                 st.session_state.llm_response = full_response
+            with feedback_div.container():
+                handle_rag_feedback(search, st.session_state.llm_response, "rag_feedback")  
 
 if __name__ == '__main__':
     asyncio.run(main())

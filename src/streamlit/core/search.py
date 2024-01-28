@@ -1,18 +1,19 @@
 import asyncio
 import random
 from typing import List
-from schemas.search import SearchResult
 from langchain_core.documents import Document
 from core.conversation_handler import ConversationHandler
 from core.settings import settings
 
-async def mock_get_source_documents(search: str):
+async def mock_get_source_documents(search: str) -> List[Document]:
     await asyncio.sleep(random.random() * 2)
     return [
-        SearchResult(
-            title=f"Article #{i+1} {search}",
+        Document(
             page_content="Lorem Ipsum fdskfls " * 50,
-            link="https://google.com",
+            metadata={
+                "title": f"Article #{i+1} {search}",
+                "link": "https://google.com",
+            }
         ) for i in range(20)
     ]
 

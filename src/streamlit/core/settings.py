@@ -1,6 +1,7 @@
 import sys
 import os
 from loguru import logger
+from typing import Dict, Any
 from pydantic_settings import BaseSettings
 import requests
 
@@ -15,6 +16,18 @@ class Settings(BaseSettings):
     openai_api_base: str
     rapid_client_id: str
     rapid_client_secret: str
+
+    # Directus settings
+    directus_host: str = os.getenv("DIRECTUS_HOST", "http://directus:8055")
+    directus_api_key: str
+    directus_rag_feedback_table = os.getenv("DIRECTUS_RAG_FEEDBACK_TABLE", "ai_rag_feedback")
+    directus_search_feedback_table = os.getenv("DIRECTUS_RAG_FEEDBACK_TABLE", "ai_search_feedback")
+
+    # Define score mappings for both "thumbs" and "faces" feedback systems
+    score_mappings: Dict[str, Any] = {
+        "thumbs": {"👍": 1, "👎": 0},
+        "faces": {"😀": 1, "🙂": 0.75, "😐": 0.5, "🙁": 0.25, "😞": 0},
+    }
 
 settings = Settings()
 

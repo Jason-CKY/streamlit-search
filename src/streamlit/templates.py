@@ -111,7 +111,6 @@ def pagination(total_pages: int, search: str, current_page: int) -> str:
             st.button(button.text, disabled=button.disabled, on_click=button.onClick,
                       args=button.args, use_container_width=True)
 
-
 def tag_boxes(search: str, tags: list, active_tag: str) -> str:
     """ HTML scripts to render tag boxes. """
     html = ''
