@@ -7,6 +7,7 @@ from core.search import mock_get_source_documents
 from core.feedback import handle_search_feedback, handle_rag_feedback
 from core.conversation_handler import ConversationHandler
 from core.settings import settings
+from core.sidebar import sidebar
 from loguru import logger
 
 def set_session_state():
@@ -27,6 +28,8 @@ def set_session_state():
         st.session_state.rag_feedback = None
     if 'search_feedbacks' not in st.session_state:
         st.session_state.search_feedbacks = {}  
+    if 'search_params' not in st.session_state:
+        st.session_state.search_params = {}
 
     # get parameters in url
     if 'search' in st.query_params:
@@ -41,10 +44,15 @@ def search_input_on_change():
 
 async def main():
     set_session_state()
-    st.set_page_config(page_title='AI-Powered Search Engine')
+    st.set_page_config(
+        page_title='AI-Powered Search Engine', 
+        initial_sidebar_state="collapsed"
+    )
     st.write(templates.load_css(), unsafe_allow_html=True)
     st.title('AI-Powered Search')
-   
+
+    sidebar()
+
     search = st.text_input('Enter search words:', key="search", on_change=search_input_on_change)
     if search:
         if st.session_state._search != search:
