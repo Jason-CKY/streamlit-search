@@ -1,10 +1,13 @@
 import requests
 from langchain_core.documents import Document
 from loguru import logger
+from typing import Union
+import streamlit as st
 from streamlit_feedback import streamlit_feedback
 from core.settings import settings
 
-def submit_search_feedback(feedback, query: str, search_result: Document):
+def submit_search_feedback(feedback, query: str, search_result: Document, key: str):
+    st.session_state.search_feedbacks[key] = feedback
     submit_feedback_json = {
             "query": query,
             "page_content": search_result.page_content,
@@ -25,14 +28,15 @@ def submit_search_feedback(feedback, query: str, search_result: Document):
         logger.error(response.json())
 
 
-def handle_search_feedback(query: str, search_result: Document, key: str):
+def handle_search_feedback(query: str, search_result: Document, key: str, disable_with_score: Union[str, None]):
     # Render feedback and set on_submit flag to submit feedback to directus
     streamlit_feedback(
         feedback_type="faces",
         optional_text_label="[Optional] Please provide an explanation",
         key=key,
         align="flex-start",
-        on_submit = lambda feedback: submit_search_feedback(feedback, query, search_result)
+        on_submit = lambda feedback: submit_search_feedback(feedback, query, search_result, key),
+        disable_with_score=disable_with_score,
     )
 
 def submit_rag_feedback(feedback, query: str, rag_response: str):
@@ -53,13 +57,14 @@ def submit_rag_feedback(feedback, query: str, rag_response: str):
     if response.status_code != 200:
         logger.error(response.json())
 
-def handle_rag_feedback(query: str, rag_response: str, key: str):
+def handle_rag_feedback(query: str, rag_response: str, key: str, disable_with_score: Union[str, None]):
     # Render feedback and set on_submit flag to submit feedback to directus
     streamlit_feedback(
         feedback_type="faces",
         optional_text_label="[Optional] Please provide an explanation",
         key=key,
         align="flex-start",
-        on_submit = lambda feedback: submit_rag_feedback(feedback, query, rag_response)
+        on_submit = lambda feedback: submit_rag_feedback(feedback, query, rag_response),
+        disable_with_score=disable_with_score,
     )
     

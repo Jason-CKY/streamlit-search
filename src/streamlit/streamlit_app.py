@@ -23,7 +23,10 @@ def set_session_state():
         st.session_state.llm_response = None    
     if 'query_time' not in st.session_state:
         st.session_state.query_time = None
-
+    if 'rag_feedback' not in st.session_state:
+        st.session_state.rag_feedback = None
+    if 'search_feedbacks' not in st.session_state:
+        st.session_state.search_feedbacks = {}  
 
     # get parameters in url
     if 'search' in st.query_params:
@@ -67,15 +70,17 @@ async def main():
             # restart streaming if the user goes back to page 1
             if st.session_state.llm_response is not None:
                 st.chat_message("assistant").write(llm_response)
-                handle_rag_feedback(search, st.session_state.llm_response, "rag_feedback")  
+                handle_rag_feedback(
+                    query=search, 
+                    rag_response=st.session_state.llm_response, 
+                    key="rag_feedback", 
+                    disable_with_score=st.session_state.rag_feedback["score"] if st.session_state.rag_feedback else None
+                )  
                 llm_response_div = None        
             elif st.session_state.page == 1:
                 llm_response_div = st.empty()
             else:
                 llm_response_div = None
-
-        if llm_response_div is not None:
-            feedback_div = st.empty()
 
         from_i = (st.session_state.page - 1) * settings.page_size
         paginated_results = results[from_i:from_i + settings.page_size]
@@ -83,6 +88,7 @@ async def main():
         # show number of results and time taken
         st.write(templates.number_of_results(len(results), query_time),
                  unsafe_allow_html=True)
+        
         # search results
         for i, result in enumerate(paginated_results):
             st.write(
@@ -94,7 +100,8 @@ async def main():
             handle_search_feedback(
                 query=search,
                 search_result=result,
-                key=f"{i}",
+                key=f"search_feedback_{from_i + i}",
+                disable_with_score=st.session_state.search_feedbacks[f"search_feedback_{from_i + i}"]["score"] if st.session_state.search_feedbacks and f"search_feedback_{from_i + i}" in st.session_state.search_feedbacks else None,
             )
         # pagination
         if len(results) > settings.page_size:
@@ -123,8 +130,8 @@ async def main():
 
                 message_placeholder.markdown(full_response)
                 st.session_state.llm_response = full_response
-            with feedback_div.container():
-                handle_rag_feedback(search, st.session_state.llm_response, "rag_feedback")  
+                st.rerun()
+
 
 if __name__ == '__main__':
     asyncio.run(main())
