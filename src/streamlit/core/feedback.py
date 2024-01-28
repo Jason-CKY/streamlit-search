@@ -14,13 +14,15 @@ def submit_search_feedback(feedback, query: str, search_result: Document):
             "comments": feedback["text"],
     }
     logger.debug(submit_feedback_json)
-    requests.post(
+    response = requests.post(
         f"{settings.directus_host}/items/{settings.directus_search_feedback_table}",
         headers={
             "Authorization": f"Bearer {settings.directus_api_key}"
         },
         json=submit_feedback_json,
     )
+    if response.status_code != 200:
+        logger.error(response.json())
 
 
 def handle_search_feedback(query: str, search_result: Document, key: str):
@@ -41,13 +43,15 @@ def submit_rag_feedback(feedback, query: str, rag_response: str):
             "comments": feedback["text"],
     }
     logger.debug(submit_feedback_json)
-    requests.post(
+    response = requests.post(
         f"{settings.directus_host}/items/{settings.directus_rag_feedback_table}",
         headers={
             "Authorization": f"Bearer {settings.directus_api_key}"
         },
         json=submit_feedback_json,
     )
+    if response.status_code != 200:
+        logger.error(response.json())
 
 def handle_rag_feedback(query: str, rag_response: str, key: str):
     # Render feedback and set on_submit flag to submit feedback to directus

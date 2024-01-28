@@ -19,9 +19,9 @@ class Settings(BaseSettings):
 
     # Directus settings
     directus_host: str = os.getenv("DIRECTUS_HOST", "http://directus:8055")
-    directus_api_key: str
-    directus_rag_feedback_table = os.getenv("DIRECTUS_RAG_FEEDBACK_TABLE", "ai_rag_feedback")
-    directus_search_feedback_table = os.getenv("DIRECTUS_RAG_FEEDBACK_TABLE", "ai_search_feedback")
+    directus_api_key: str = "btFBH6DZzvhfufNYakQOmozszmFtEByj"
+    directus_rag_feedback_table: str = os.getenv("DIRECTUS_RAG_FEEDBACK_TABLE", "ai_rag_feedback")
+    directus_search_feedback_table: str = os.getenv("DIRECTUS_RAG_FEEDBACK_TABLE", "ai_search_feedback")
 
     # Define score mappings for both "thumbs" and "faces" feedback systems
     score_mappings: Dict[str, Any] = {

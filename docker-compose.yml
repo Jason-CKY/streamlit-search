@@ -44,6 +44,23 @@ services:
       DB_CLIENT: ${DB_CLIENT}
       DB_FILENAME: ${DB_FILENAME}
 
+  directus-mapping-init:
+    image: python:3.10
+    container_name: directus-init
+    environment:
+      DIRECTUS_HOST: ${DIRECTUS_HOST}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ./dev_components/directus/init.py:/init.py
+    depends_on:
+      - directus
+    command: >
+      bash -c '
+        pip install requests
+        python /init.py
+      '
+
 volumes:
   directus_database:
   directus_uploads:
